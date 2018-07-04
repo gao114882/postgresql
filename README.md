@@ -101,3 +101,37 @@ create tale student {
   age int, 
   class_no int REFERENCES class(class_no)
 };
+
+删除普通字段：
+
+alter table drop column class_teacher;
+
+删除外键字段：
+
+alter table class drop column class_no cascade;
+
+增加约束：
+
+alter table student add CHECK(age <16);
+alter table class add constraint unique_class_teacher unique(class_teacher);
+
+增加非空约束：
+
+alter table student alter column student_name set not null;
+
+删除约束：
+
+alter table student drop constraint student_age_check;
+
+删除非空约束:
+
+alter table student alter column student_name drop not null;
+
+修改默认值：
+
+alter table student alter column age set default 15;
+
+删除默认值：
+
+alter table student alter column age drop default;
+
