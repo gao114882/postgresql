@@ -164,4 +164,5 @@ create table students {
  select *from persions;
  
 当查询父表时，会把这个父表中的子表的数据也查询出来，反之不行。往父表中更新数据，子表不能看到这条数据的。
-如果只想把父表本身数据查询出来，需要在查询的表名前加'only'。select *from only persions;
+如果只想把父表本身数据查询出来，需要在查询的表名前加'only'。select *from only persions; 
+所有父表的检查约束和非空约束都会自动被所有子表继承，不过其他类型的约束（唯一，主键，外键）则不会被继承。
