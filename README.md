@@ -135,3 +135,7 @@ alter table student alter column age set default 15;
 
 alter table student alter column age drop default;
 
+修改字段数据类型：
+
+alter table student alter column student_name type text;
+
