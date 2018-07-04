@@ -32,3 +32,7 @@
 15. 事务自动提交关闭：\set AUTOCOMMIT off
 
 16. 输入部分命令，两次tab键可以自动补全
+
+17.显示某个命令的实际执行过程： \set ECHO_HIDDEN on|off
+
+
