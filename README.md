@@ -46,3 +46,9 @@ text: 变长，无长度限制。
 显示时间格式： show datestyle ; set datestyle = 'YMD'
 
 访问复合类型时： select (persion_info).name from author ; 要加()
+
+insert into author values(('张三', 29, TRUE), '自传')；
+
+update author set persion_info = ('王二', 49, TRUE) where id = 1; or set persion_info = ROW('王二', 39, TRUE) where uid = 1;
+
+update author set persion_info.name = '王二二' where id = 2; or set persion_info.age = (persion_info).age + 1 where id = 2;
