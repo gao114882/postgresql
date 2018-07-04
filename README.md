@@ -43,5 +43,5 @@ character(n), char(n):定长，不足补空白，最大1G.存储空间为：4+n
 
 text: 变长，无长度限制。
 
-显示时间格式： show datestyle ;
+显示时间格式： show datestyle ; set datestyle = 'YMD'
 
