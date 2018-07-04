@@ -35,4 +35,13 @@
 
 17.显示某个命令的实际执行过程： \set ECHO_HIDDEN on|off
 
+数据类型说明：
+
+character varying(n), varchar(n):变长，最大为1G.存储空间为：4+n，如果使用charcter varying 不带长度，那么该类型可以接受任何长度的字符串。
+
+character(n), char(n):定长，不足补空白，最大1G.存储空间为：4+n
+
+text: 变长，无长度限制。
+
+显示时间格式： show datestyle ;
 
