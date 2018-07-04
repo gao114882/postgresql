@@ -176,3 +176,6 @@ create table students {
 如果想重建原来的索引，可以先另外建个新的，然后删除原来的，如：create index concurrently idx_test_note2 on table_name(note); drop index idx_test_note;
 
 并发创建索引时，如果创建过程被取消，可能会留下一个无效的索引，导致更新变慢。如何创建的事唯一索引，这个无效索引会导致插入重复值失败。此时，手动删除即可。
+
+
+查看锁的信息，select *from pg_locks;
