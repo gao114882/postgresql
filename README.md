@@ -54,3 +54,5 @@ update author set persion_info = ('王二', 49, TRUE) where id = 1; or set persi
 update author set persion_info.name = '王二二' where id = 2; or set persion_info.age = (persion_info).age + 1 where id = 2;
 
 查看索引大小：select pg_indexes_size('');
+
+create index tb_key on tb_name using gin (collon); or using gist (collon);
