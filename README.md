@@ -140,3 +140,9 @@ alter table student alter column age drop default;
 alter table student alter column student_name type text;
 
 只有在字段里现有的每个项都可以隐式转换成新类型时，才能成功。比如把varchar(n) 转成integer，会因为字符串无法隐式转换成数字类型而失败。
+
+重命名字段：
+
+alter table books rename column book_no to book_id; 
+
+
