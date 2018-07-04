@@ -56,3 +56,9 @@ update author set persion_info.name = '王二二' where id = 2; or set persion_i
 查看索引大小：select pg_indexes_size('');
 
 create index tb_key on tb_name using gin (collon); or using gist (collon);
+
+创建模式：
+
+create schema addfd ;
+alter chema addfd rename to newname;
+alter chema addfd owner to newowner;
