@@ -88,6 +88,8 @@ or create table books {
    UNIQUE(book_no) //表约束
 }；
 
+create unique index index_unique_class_no on table_name(collon);
+
 外键约束：
 
 create table class {
