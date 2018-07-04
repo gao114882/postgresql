@@ -62,3 +62,14 @@ create index tb_key on tb_name using gin (collon); or using gist (collon);
 create schema addfd ;
 alter chema addfd rename to newname;
 alter chema addfd owner to newowner;
+
+
+创建复合主键,unique：
+
+create table test02(id int , id2 int, id3 int, not varchar(20), constraint pk_test02 primary key(id, id2), constraint uk_test02 unique(id3));
+
+按照其他表创建新表：
+
+create table baby (like test02); 没有复制相关的约束条件
+
+create table baby(like test02 including all);完全复制
