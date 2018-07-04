@@ -145,4 +145,23 @@ alter table student alter column student_name type text;
 
 alter table books rename column book_no to book_id; 
 
+表继承：
 
+create table persions {
+  name text,
+  sex boolean,
+  age int 
+};
+
+create table students {
+  class_no int 
+}INHERITS (persions);
+
+
+如： insert into students values('张三', 15, true, 1);
+    insert into students values('李四', 14, false, 2);
+    
+ select *from persions;
+ 
+当查询父表时，会把这个父表中的子表的数据也查询出来，反之不行。往父表中更新数据，子表不能看到这条数据的。
+如果只想把父表本身数据查询出来，需要在查询的表名前加'only'。select *from only persions;
