@@ -45,3 +45,4 @@ text: 变长，无长度限制。
 
 显示时间格式： show datestyle ; set datestyle = 'YMD'
 
+访问复合类型时： select (persion_info).name from author ; 要加()
