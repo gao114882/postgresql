@@ -73,3 +73,17 @@ create table test02(id int , id2 int, id3 int, not varchar(20), constraint pk_te
 create table baby (like test02); 没有复制相关的约束条件
 
 create table baby(like test02 including all);完全复制
+
+唯一约束：
+
+create table books {
+  book_no integer UNIQUE, //字段约束
+  name text,
+  price numeric
+};         
+or create table books {
+   book_no integer,
+   name text,
+   price numeric,
+   UNIQUE(book_no) //表约束
+}；
