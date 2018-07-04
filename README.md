@@ -87,3 +87,17 @@ or create table books {
    price numeric,
    UNIQUE(book_no) //表约束
 }；
+
+外键约束：
+
+create table class {
+   class_no int primary key,
+   class_name varchar(40)
+};
+
+create tale student {
+  student_no int primary key,
+  student_name varchar(40),
+  age int, 
+  class_no int REFERENCES class(class_no)
+};
