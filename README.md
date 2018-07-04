@@ -166,3 +166,9 @@ create table students {
 当查询父表时，会把这个父表中的子表的数据也查询出来，反之不行。往父表中更新数据，子表不能看到这条数据的。
 如果只想把父表本身数据查询出来，需要在查询的表名前加'only'。select *from only persions; 
 所有父表的检查约束和非空约束都会自动被所有子表继承，不过其他类型的约束（唯一，主键，外键）则不会被继承。
+
+在已有数据的表上添加索引，需要加concurrently进行并发创建索引，避免阻塞。 如：create index concurrently idx_test_note on table_name(note);
+
+如果想重建原来的索引，可以先另外建个新的，然后删除原来的，如：create index concurrently idx_test_note2 on table_name(note); drop index idx_test_note;
+
+并发创建索引时，如果创建过程被取消，可能会留下一个无效的索引，导致更新变慢。如何创建的事唯一索引，这个无效索引会导致插入重复值失败。此时，手动删除即可。
