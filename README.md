@@ -197,3 +197,21 @@ select pg_is_in_backup(), pg_backup_start_time();
 查看数据库大小：
 
  select pg_database_size('rs01'), pg_size_pretty(pg_database_size('rs01'));
+
+查看表大小：
+
+select pg_size_pretty(pg_relation_size('a')); //只计算表大小，不包括索引大小
+
+select pg_size_pretty(pg_total_relation_size('a'));//包括索引
+
+查看索引大小：
+
+select pg_size_pretty(pg_indexes_size('表名'));
+
+查看表空间大小：
+
+select pg_size_pretty(pg_tablespace_size('pg_global'));
+
+查看表对应的数据文件：
+
+select pg_relation_filepath('tbl_device_info');
