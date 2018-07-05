@@ -193,3 +193,7 @@ select pg_conf_load_time();
 查看数据库是否备份：
 
 select pg_is_in_backup(), pg_backup_start_time();
+
+查看数据库大小：
+
+ select pg_database_size('rs01'), pg_size_pretty(pg_database_size('rs01'));
