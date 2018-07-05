@@ -243,3 +243,8 @@ Seq Scan “全表扫描”，
 cost=0.00..0.03 rows=1 width=97： ‘0.00’:表示启动成本,'0.03':返回所有数据成本, 'rows':表示会返回多少行, 'width':每行平均宽度多少字节
 
 顺序扫描一个数据块：cost = 1; 随机扫描一个数据块，cost = 4; 处理一个数据行的CPU, cost= 0.01; 处理一个索引行的CPU， cost= 0.005;每个操作符的CPU代价为0.0025 
+
+explain (format json/xml/YAML) select *from tbl_device_info limit 1;
+加上 analyze 后 可获得更精确的执行计划。
+
+explain (analyze true, buffers true) select *from  tbl_device_info limit 1;
