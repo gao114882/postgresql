@@ -179,3 +179,17 @@ create table students {
 
 
 查看锁的信息，select *from pg_locks;
+
+查看数据库启动时间：
+select pg_postmaster_start_time();
+
+查看数据库版本： 
+
+select version();
+
+查看配置加载时间：
+select pg_conf_load_time();
+
+查看数据库是否备份：
+
+select pg_is_in_backup(), pg_backup_start_time();
