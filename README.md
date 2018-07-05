@@ -215,3 +215,16 @@ select pg_size_pretty(pg_tablespace_size('pg_global'));
 查看表对应的数据文件：
 
 select pg_relation_filepath('tbl_device_info');
+
+
+修改配置后，生效方式(需要重启的此方法行不通)：
+
+1.pg_ctl reload   2. select pg_reload_conf()
+
+查询长时间运行的SQL：
+
+select *from pg_stat_activity;
+
+取消一个正在长时间执行的SQL：
+pg_cancel_backend(pid); pg_terminate_backend(pid);
+
