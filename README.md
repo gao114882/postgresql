@@ -248,3 +248,11 @@ explain (format json/xml/YAML) select *from tbl_device_info limit 1;
 加上 analyze 后 可获得更精确的执行计划。
 
 explain (analyze true, buffers true) select *from  tbl_device_info limit 1;
+
+规则：
+
+create RULE rule_mytab_insert as on insert to mytab do also insert into mytab_log(oprtype, oprtime, id, note) values();
+
+create RULE rule_mytab_update as on update to mytab do also (insert into mytab_log() values(); insert into mytab_log()values());
+
+create RULErule_mytab_delete as on delete to mytab do also insert into mytab_log() values();
