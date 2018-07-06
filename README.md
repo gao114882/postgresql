@@ -256,3 +256,7 @@ create RULE rule_mytab_insert as on insert to mytab do also insert into mytab_lo
 create RULE rule_mytab_update as on update to mytab do also (insert into mytab_log() values(); insert into mytab_log()values());
 
 create RULErule_mytab_delete as on delete to mytab do also insert into mytab_log() values();
+
+归还视图权限给某个用户：
+
+grant select on myview to user01;
