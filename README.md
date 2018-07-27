@@ -37,6 +37,10 @@
 
 18. 查看pid: select pg_backend_pid()
 
+19. regexp_split_to_table 切割字符查询
+
+select *from tbl_device_info where sn in (select regexp_split_to_table($1, ','))  $1= [devsnList.join()]
+
 数据类型说明：
 
 character varying(n), varchar(n):变长，最大为1G.存储空间为：4+n，如果使用charcter varying 不带长度，那么该类型可以接受任何长度的字符串。
