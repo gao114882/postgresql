@@ -41,6 +41,11 @@
 
 select *from tbl_device_info where sn in (select regexp_split_to_table($1, ','))  $1= [devsnList.join()]
 
+20. 时间转化成秒
+select extract(epoch FROM (begin_time - end_time ))
+
+
+
 数据类型说明：
 
 character varying(n), varchar(n):变长，最大为1G.存储空间为：4+n，如果使用charcter varying 不带长度，那么该类型可以接受任何长度的字符串。
