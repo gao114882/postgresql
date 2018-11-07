@@ -333,8 +333,86 @@ $function$
 select devid, alias, is_default, is_device_admin, softversion, ctrlversion, modetype, retcode, retmsg from fn_user_add_dev_2($1, $2) as (devid bigint, alias varchar, is_default bool, is_device_admin bool, softversion varchar, ctrlversion varchar, modetype integer, retcode integer, retmsg varchar)
 
 
+2.delete all
+CREATE OR REPLACE FUNCTION ruishi.fn_delete_device_all(devsn_list_str character varying, delete_register_record boolean DEFAULT false)
+ RETURNS SETOF device_sn_id
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    devid_rows RECORD;
+BEGIN
+    FOR devid_rows IN SELECT devid, sn FROM tbl_device_info WHERE sn IN (select regexp_split_to_table(devsn_list_str, ',')) LOOP
+        PERFORM fn_device_deleting(devid_rows.devid, delete_register_record);
+        RETURN NEXT devid_rows;
+    END LOOP;
+END;
+$function$
 
 
+3.delete
 
+CREATE OR REPLACE FUNCTION ruishi.fn_device_deleting(dev_id bigint, delete_register_record boolean DEFAULT false)
+ RETURNS bigint
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    uid_rows RECORD;
+BEGIN
+    insert into tbl_admin_reset_device_log (op_result, delete_register_record) values (dev_id, delete_register_record);
+    --DELETE FROM tbl_user_devices WHERE devid=dev_id;
+    FOR uid_rows IN SELECT uid FROM tbl_user_devices WHERE devid=dev_id LOOP
+        PERFORM fn_user_del_dev(uid_rows.uid, dev_id);
+    END LOOP;
+    DELETE FROM tbl_device_faultevent WHERE devid=dev_id;
+    DELETE FROM tbl_device_keyevent WHERE devid=dev_id;
+    --DELETE FROM tbl_device_cleanmap WHERE devid=dev_id;
+    --DELETE FROM tbl_device_cleaninfo WHERE devid=dev_id;
+    UPDATE tbl_device_cleaninfo SET deleted=true WHERE devid=dev_id;
+    DELETE FROM tbl_device_cycle_status_log WHERE devid=dev_id;
+
+    IF delete_register_record THEN
+        DELETE FROM tbl_device_info WHERE devid=dev_id;
+    ELSE
+        UPDATE tbl_device_info SET cycle_status=1, cycle_utime=ctime WHERE devid=dev_id;
+    END IF;
+
+    RETURN dev_id;
+END;
+$function$
+
+4.
+
+CREATE OR REPLACE FUNCTION ruishi.fn_user_del_dev(i_user_id bigint, i_dev_id bigint)
+ RETURNS record
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    v_user_dev_cnt INTEGER := 0;
+    v_is_device_admin BOOLEAN := false;
+    v_uid_list_str VARCHAR;
+    v_retcode INTEGER := 0;
+    v_retmsg VARCHAR := 'Success';
+BEGIN
+    SELECT is_device_admin INTO v_is_device_admin FROM tbl_user_devices WHERE uid=i_user_id AND devid=i_dev_id;
+    IF FOUND THEN
+        IF v_is_device_admin = true THEN
+            SELECT array_to_string(ARRAY(SELECT uid FROM tbl_user_devices WHERE devid=i_dev_id), ',') INTO v_uid_list_str;
+            DELETE FROM tbl_user_devices WHERE devid=i_dev_id;
+        ELSE
+            DELETE FROM tbl_user_devices WHERE uid=i_user_id AND devid=i_dev_id;
+
+            SELECT count(*) INTO v_user_dev_cnt FROM tbl_user_devices WHERE uid=i_user_id;
+            IF v_user_dev_cnt = 1 THEN
+                UPDATE tbl_user_devices SET is_default=true WHERE uid=i_user_id AND is_default=false;
+            END IF;
+        END IF;
+    ELSE
+        v_retcode := 10014;
+        v_retmsg := 'User device ' || i_dev_id || ' not exists';
+    END IF;
+
+    RETURN (i_dev_id, v_uid_list_str, v_retcode, v_retmsg);
+END;
+$function$
 
 
