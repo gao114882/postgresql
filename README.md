@@ -269,3 +269,68 @@ create RULErule_mytab_delete as on delete to mytab do also insert into mytab_log
 归还视图权限给某个用户：
 
 grant select on myview to user01;
+
+自定义函数：
+CREATE OR REPLACE FUNCTION ruishi.fn_user_add_dev_2(i_user_id bigint, i_dev_id bigint)
+ RETURNS record
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    v_dev_sn VARCHAR;
+    v_alias VARCHAR;
+    v_devsn_num_tail INTEGER := 0;
+    v_is_default BOOLEAN := false;
+    v_is_device_admin BOOLEAN := false;
+    v_retcode INTEGER := 0;
+    v_retmsg VARCHAR := 'Success';
+    v_mfrs_id INTEGER := 0;
+    v_modetype INTEGER := 0;
+    v_softversion VARCHAR;
+    v_ctrlversion VARCHAR;
+    v_alias_prefix VARCHAR;
+BEGIN
+    SELECT sn, softversion, ctrlversion, modetype INTO v_dev_sn, v_softversion, v_ctrlversion, v_modetype FROM tbl_device_info WHERE devid=i_dev_id and mfrs_id = (select mf
+rs_id from tbl_user_login where uid=i_user_id);
+    IF FOUND THEN
+        IF EXISTS (SELECT 1 FROM tbl_user_devices WHERE uid=i_user_id AND devid=i_dev_id) THEN
+            SELECT alias, is_default, is_device_admin INTO v_alias, v_is_default, v_is_device_admin FROM tbl_user_devices WHERE uid=i_user_id AND devid=i_dev_id;
+        ELSE
+            IF NOT EXISTS (SELECT 1 FROM tbl_user_devices WHERE uid=i_user_id AND is_default=true) THEN
+                v_is_default := true;  -- if user has no default device, then set it for current
+            END IF;
+
+            IF NOT EXISTS (SELECT 1 FROM tbl_user_devices WHERE devid=i_dev_id AND is_device_admin=true) THEN
+                v_is_device_admin := true;  -- if device has no admin, then set it for current
+            END IF;
+
+            SELECT mfrs_id, modetype INTO v_mfrs_id, v_modetype FROM tbl_device_info WHERE devid=i_dev_id;
+            SELECT alias_prefix, devsn_num_tail INTO v_alias_prefix, v_devsn_num_tail FROM tbl_device_alias_rule WHERE mfrs_id=v_mfrs_id AND device_type=v_modetype;
+            IF NOT FOUND THEN
+                v_alias_prefix = 'Unknown';
+            END IF;
+            IF v_devsn_num_tail > 0 THEN
+                v_alias := v_alias_prefix || '-' || upper(right(v_dev_sn, v_devsn_num_tail));
+            ELSE
+                v_alias = v_alias_prefix;
+            END IF;
+            INSERT INTO tbl_user_devices (uid, devid, alias, is_default, is_device_admin, is_shared) VALUES (i_user_id, i_dev_id, v_alias, v_is_default, v_is_device_admin, 
+true);
+        END IF;
+    ELSE
+        v_retcode := 12003;
+        v_retmsg := FORMAT('Device (devid: %s) not exists', i_dev_id);
+    END IF;
+
+    RETURN (i_dev_id, v_alias, v_is_default, v_is_device_admin, v_softversion, v_ctrlversion, v_modetype, v_retcode, v_retmsg);
+END;
+$function$
+
+
+
+
+
+
+
+
+
+
