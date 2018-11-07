@@ -272,9 +272,12 @@ grant select on myview to user01;
 
 自定义函数：
 CREATE OR REPLACE FUNCTION ruishi.fn_user_add_dev_2(i_user_id bigint, i_dev_id bigint)
+
  RETURNS record
  LANGUAGE plpgsql
+ 
 AS $function$
+
 DECLARE
     v_dev_sn VARCHAR;
     v_alias VARCHAR;
@@ -288,6 +291,7 @@ DECLARE
     v_softversion VARCHAR;
     v_ctrlversion VARCHAR;
     v_alias_prefix VARCHAR;
+    
 BEGIN
     SELECT sn, softversion, ctrlversion, modetype INTO v_dev_sn, v_softversion, v_ctrlversion, v_modetype FROM tbl_device_info WHERE devid=i_dev_id and mfrs_id = (select mf
 rs_id from tbl_user_login where uid=i_user_id);
