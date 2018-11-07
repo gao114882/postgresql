@@ -329,8 +329,8 @@ true);
 END;
 $function$
 
-
-
+使用方法：
+select devid, alias, is_default, is_device_admin, softversion, ctrlversion, modetype, retcode, retmsg from fn_user_add_dev_2($1, $2) as (devid bigint, alias varchar, is_default bool, is_device_admin bool, softversion varchar, ctrlversion varchar, modetype integer, retcode integer, retmsg varchar)
 
 
 
