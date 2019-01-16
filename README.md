@@ -416,5 +416,6 @@ END;
 $function$
 
 设置一次显示完全
+
 unset EDITOR
 unset PAGER
