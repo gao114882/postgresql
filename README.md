@@ -217,6 +217,9 @@ select pg_size_pretty(pg_total_relation_size('a'));//包括索引
 
 select pg_size_pretty(pg_indexes_size('表名'));
 
+通过pg_stat_user_indexes.idx_scan可检查利用索引进行扫描的次数；这样可以确认那些索引可以清理
+select idx_scan from pg_stat_user_indexes;
+
 查看表空间大小：
 
 select pg_size_pretty(pg_tablespace_size('pg_global'));
